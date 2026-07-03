@@ -12,6 +12,7 @@ public class EmailTask extends Task
 
     @Override
     public void execute() {
-        System.out.println("Executing email task: "+getName());
+        System.out.println("Executing email task: " + getName());
+        throw new RuntimeException("Simulated failure"); // remove this later
     }
 }

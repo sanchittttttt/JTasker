@@ -90,7 +90,7 @@ engine.submit(task);
 - [x] Task model with full lifecycle
 - [x] Pluggable retry strategies
 - [x] Builder pattern for task configuration
-- [ ] Multi-threaded execution engine
+- [x] Multi-threaded execution engine
 - [ ] Job registry with ConcurrentHashMap
 - [ ] Write-Ahead Log for crash recovery
 - [ ] JUnit 5 test coverage

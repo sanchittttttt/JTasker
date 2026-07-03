@@ -18,7 +18,7 @@ public class Main {
 
         Task task2 = new TaskBuilder()
                 .name("send-invoice")
-                .retryStrategy(new FixedDelay(3, 1000))
+                .retryStrategy(new FixedDelay(3, 500))
                 .build();
 
         engine.submit(task1);
