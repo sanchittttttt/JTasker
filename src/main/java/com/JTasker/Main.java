@@ -1,19 +1,34 @@
 package com.JTasker;
 
 import com.JTasker.builder.TaskBuilder;
+import com.JTasker.engine.TaskEngine;
 import com.JTasker.model.Task;
+import com.JTasker.strategy.strategies.FixedDelay;
 import com.JTasker.strategy.strategies.NoRetry;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
-    public static void main(String[] args) {
-        Task task = new TaskBuilder()
-                .id("001")
+    public static void main(String[] args) throws InterruptedException {
+        TaskEngine engine = new TaskEngine();
+        engine.start();
+
+        Task task1 = new TaskBuilder()
                 .name("send-welcome-email")
                 .retryStrategy(new NoRetry())
                 .build();
 
-        System.out.println(task);
+        Task task2 = new TaskBuilder()
+                .name("send-invoice")
+                .retryStrategy(new FixedDelay(3, 1000))
+                .build();
+
+        engine.submit(task1);
+        engine.submit(task2);
+
+        Thread.sleep(1000); // wait for tasks to finish
+
+        System.out.println(engine.getTask(task1.getId()));
+        System.out.println(engine.getTask(task2.getId()));
+
+        engine.shutdown();
     }
 }

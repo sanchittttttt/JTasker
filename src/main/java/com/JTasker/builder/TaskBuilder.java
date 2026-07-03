@@ -4,17 +4,13 @@ import com.JTasker.model.Task;
 import com.JTasker.strategy.RetryStrategy;
 import com.JTasker.tasks.EmailTask;
 
+import java.util.UUID;
+
 public class TaskBuilder
 {
-    private String id;
+    private String id = UUID.randomUUID().toString();;
     private String name;
     private RetryStrategy retryStrategy;
-
-    public TaskBuilder id(String id)
-    {
-        this.id = id;
-        return this;
-    }
 
     public  TaskBuilder name(String name)
     {

@@ -10,7 +10,7 @@ public abstract class Task {
     private TaskStatus status;
     private RetryStrategy retryStrategy;
 
-    public Task(String id, String name,RetryStrategy retryStrategy) {
+    public Task(String id, String name, RetryStrategy retryStrategy) {
         this.id = id;
         this.name = name;
         this.retryStrategy = retryStrategy;
@@ -68,5 +68,5 @@ public abstract class Task {
                 '}';
     }
 
-    protected abstract void execute();
+    public abstract void execute();
 }
