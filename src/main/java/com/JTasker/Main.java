@@ -5,6 +5,7 @@ import com.JTasker.engine.TaskEngine;
 import com.JTasker.model.Task;
 import com.JTasker.strategy.strategies.FixedDelay;
 import com.JTasker.strategy.strategies.NoRetry;
+import com.JTasker.wal.WriteAheadLog;
 
 public class Main {
     public static void main(String[] args) throws InterruptedException {
@@ -24,11 +25,12 @@ public class Main {
         engine.submit(task1);
         engine.submit(task2);
 
-        Thread.sleep(1000); // wait for tasks to finish
+        Thread.sleep(5000); // wait for tasks to finish
 
         System.out.println(engine.getTask(task1.getId()));
         System.out.println(engine.getTask(task2.getId()));
 
         engine.shutdown();
     }
+
 }

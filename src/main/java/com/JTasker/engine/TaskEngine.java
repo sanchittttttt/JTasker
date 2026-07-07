@@ -3,7 +3,9 @@ package com.JTasker.engine;
 import com.JTasker.model.Task;
 import com.JTasker.model.TaskStatus;
 import com.JTasker.strategy.RetryStrategy;
+import com.JTasker.wal.WriteAheadLog;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
@@ -14,9 +16,11 @@ public class TaskEngine
     private volatile boolean running = false;
     private ExecutorService engine;
     private Map<String, Task> registry = new ConcurrentHashMap<>();
+    private final WriteAheadLog wal = new WriteAheadLog();
 
     public void start()
     {
+        recover();
         running = true;
         engine = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     }
@@ -34,8 +38,10 @@ public class TaskEngine
             while (attempts <= maxRetries) {
                 try {
                     task.setStatus(TaskStatus.RUNNING);
+                    wal.log(task.getId(), task.getName(), task.getStatus());
                     task.execute();
                     task.setStatus(TaskStatus.DONE);
+                    wal.log(task.getId(), task.getName(), task.getStatus());
                     break; // success — stop retrying
                 } catch (Exception ex) {
                     attempts++;
@@ -71,5 +77,15 @@ public class TaskEngine
     public Task getTask(String taskId)
     {
         return registry.get(taskId);
+    }
+
+    public void recover() {
+        List<String> entries = wal.recover();
+        if (entries.isEmpty()) {
+            System.out.println("No WAL found — fresh start");
+            return;
+        }
+        System.out.println("Recovering from WAL — " + entries.size() + " entries found:");
+        entries.forEach(System.out::println);
     }
 }
